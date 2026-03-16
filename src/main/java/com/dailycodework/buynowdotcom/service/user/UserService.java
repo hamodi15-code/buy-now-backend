@@ -1,7 +1,10 @@
 package com.dailycodework.buynowdotcom.service.user;
 
 import com.dailycodework.buynowdotcom.dtos.UserDto;
+import com.dailycodework.buynowdotcom.model.Address;
+import com.dailycodework.buynowdotcom.model.Role;
 import com.dailycodework.buynowdotcom.model.User;
+import com.dailycodework.buynowdotcom.repository.AddressRepository;
 import com.dailycodework.buynowdotcom.repository.UserRepository;
 import com.dailycodework.buynowdotcom.request.CreateUserRequest;
 import com.dailycodework.buynowdotcom.request.UserUpdateRequest;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AddressRepository addressRepository;
 
     @Override
     public User createUser(CreateUserRequest request) {
@@ -33,8 +38,17 @@ public class UserService implements IUserService {
                     user.setLastName(request.getLastName());
                     user.setEmail(request.getEmail());
                     user.setPassword(passwordEncoder.encode(request.getPassword()));
-                    return userRepository.save(user);
-                }).orElseThrow(() -> new EntityExistsException("Oops! " + request.getEmail() + " is already exist!"));
+
+                    User savedUser = userRepository.save(user);
+                    Optional.ofNullable(req.getAddressList()).ifPresent(addressList -> {
+                        addressList.forEach(address -> {
+                            address.setUser(savedUser);
+                            addressRepository.save(address);
+
+                        });
+                    });
+                    return savedUser;
+                }).orElseThrow(() -> new EntityExistsException("Oops! " + request.getEmail() + " already exists!"));
     }
 
     @Override
