@@ -1,6 +1,8 @@
 package com.dailycodework.buynowdotcom.controller;
 
+import com.dailycodework.buynowdotcom.dtos.CartItemDto;
 import com.dailycodework.buynowdotcom.model.Cart;
+import com.dailycodework.buynowdotcom.model.CartItem;
 import com.dailycodework.buynowdotcom.model.User;
 import com.dailycodework.buynowdotcom.response.ApiResponse;
 import com.dailycodework.buynowdotcom.service.cart.ICartItemService;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/cartItems")
@@ -20,10 +23,12 @@ public class CartItemController {
 
     @PostMapping("/item/add")
     public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long productId, @RequestParam int quantity){
-        User user = userService.getAuthenticatedUser();
-        Cart cart = cartService.initializeNewCartForUser(user);
-        cartItemService.addItemToCart(cart.getId(),productId,quantity);
-        return ResponseEntity.ok(new ApiResponse("Item added successfully!",null));
+//        User user = userService.getAuthenticatedUser();
+//        Cart cart = cartService.initializeNewCartForUser(user);
+//        cartItemService.addItemToCart(cart.getId(),productId,quantity);
+        CartItem cartItem = cartItemService.addItemToCart(1L,productId,quantity);
+        CartItemDto cartItemDto = cartItemService.convertToDto(cartItem);
+        return ResponseEntity.ok(new ApiResponse("Item added successfully!",cartItemDto));
     }
 
     @DeleteMapping("/cart/{cartId}/item/{itemId}/remove")

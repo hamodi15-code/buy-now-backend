@@ -1,6 +1,7 @@
 package com.dailycodework.buynowdotcom.service.cart;
 
 
+import com.dailycodework.buynowdotcom.dtos.CartItemDto;
 import com.dailycodework.buynowdotcom.model.Cart;
 import com.dailycodework.buynowdotcom.model.CartItem;
 import com.dailycodework.buynowdotcom.model.Product;
@@ -9,6 +10,7 @@ import com.dailycodework.buynowdotcom.repository.CartRepository;
 import com.dailycodework.buynowdotcom.service.product.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,9 +22,10 @@ public class CartItemService implements ICartItemService {
     private final CartRepository cartRepository;
     private final ICartService cartService;
     private final IProductService productService;
+    private final ModelMapper modelMapper;
 
     @Override
-    public void addItemToCart(Long cartId, Long productId, int quantity) {
+    public CartItem addItemToCart(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
         Product product = productService.getProductById(productId);
 
@@ -42,7 +45,7 @@ public class CartItemService implements ICartItemService {
         cartItem.setTotalPrice();
         cart.addItem(cartItem);
         cartItemRepository.save(cartItem);
-
+        return cartItem;
     }
 
     @Override
@@ -76,5 +79,9 @@ public class CartItemService implements ICartItemService {
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst().orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+    }
+    @Override
+    public CartItemDto convertToDto(CartItem cartItem){
+        return modelMapper.map(cartItem, CartItemDto.class);
     }
 }
