@@ -1,11 +1,13 @@
 package com.dailycodework.buynowdotcom.service.cart;
 
+import com.dailycodework.buynowdotcom.dtos.CartDto;
 import com.dailycodework.buynowdotcom.model.Cart;
 import com.dailycodework.buynowdotcom.model.User;
 import com.dailycodework.buynowdotcom.repository.CartItemRepository;
 import com.dailycodework.buynowdotcom.repository.CartRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class CartService implements ICartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final ModelMapper mapper;
 
     @Override
     public Cart getCart(Long cartId) {
@@ -53,5 +56,9 @@ public class CartService implements ICartService {
     public BigDecimal getTotalPrice(Long cartId) {
         Cart cart = getCart(cartId);
         return cart.getTotalAmount();
+    }
+    @Override
+    public CartDto convertToDto(Cart cart){
+        return mapper.map(cart, CartDto.class);
     }
 }

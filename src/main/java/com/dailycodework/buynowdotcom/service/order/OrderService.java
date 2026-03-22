@@ -8,7 +8,11 @@ import com.dailycodework.buynowdotcom.model.OrderItem;
 import com.dailycodework.buynowdotcom.model.Product;
 import com.dailycodework.buynowdotcom.repository.OrderRepository;
 import com.dailycodework.buynowdotcom.repository.ProductRepository;
+import com.dailycodework.buynowdotcom.request.PaymentRequest;
 import com.dailycodework.buynowdotcom.service.cart.ICartService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -74,6 +78,18 @@ public class OrderService implements IOrderService {
     public List<OrderDto> getUserOrders(Long userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
         return orders.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public String createPaymentIntent(PaymentRequest request) throws StripeException {
+        long amountInSmallestUnit = Math.round(request.getAmount() * 100);
+        PaymentIntent intent = PaymentIntent.create(
+                PaymentIntentCreateParams.builder()
+                        .setAmount(amountInSmallestUnit)
+                        .setCurrency(request.getCurrency())
+                        .addPaymentMethodType("card")
+                        .build());
+        return  intent.getClientSecret();
     }
 
     @Override

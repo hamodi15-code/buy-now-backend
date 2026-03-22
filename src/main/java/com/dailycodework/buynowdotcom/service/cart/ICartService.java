@@ -1,5 +1,6 @@
 package com.dailycodework.buynowdotcom.service.cart;
 
+import com.dailycodework.buynowdotcom.dtos.CartDto;
 import com.dailycodework.buynowdotcom.dtos.UserDto;
 import com.dailycodework.buynowdotcom.model.Cart;
 import com.dailycodework.buynowdotcom.model.User;
@@ -18,4 +19,6 @@ public interface ICartService {
     Cart initializeNewCartForUser(User user);
 
     BigDecimal getTotalPrice(Long cartId);
+
+    CartDto convertToDto(Cart cart);
 }

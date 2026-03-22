@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.SQLException;
 import java.util.List;
 
-
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/images")
