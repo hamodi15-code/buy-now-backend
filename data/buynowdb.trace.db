@@ -1,3 +1,18 @@
 2026-03-22 09:00:08.939266+02:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "products" not found; SQL statement:
 select * from products [42102-224]
+2026-03-22 14:54:10.323407+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from [*]user"; expected "identifier"; SQL statement:
+select * from user [42001-224]
+2026-03-22 14:54:25.389736+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from [*]user"; expected "identifier"; SQL statement:
+select * from user [42001-224]
+2026-03-22 14:54:26.280993+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from [*]user"; expected "identifier"; SQL statement:
+select * from user [42001-224]
+2026-03-22 14:54:39.495980+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select  * from [*]user"; expected "identifier"; SQL statement:
+select  * from user [42001-224]
+2026-03-22 14:54:40.154225+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select  * from [*]user"; expected "identifier"; SQL statement:
+select  * from user [42001-224]
