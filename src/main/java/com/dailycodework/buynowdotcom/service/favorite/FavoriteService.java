@@ -2,12 +2,15 @@
 package com.dailycodework.buynowdotcom.service.favorite;
 
 import com.dailycodework.buynowdotcom.dtos.FavoriteDto;
+import com.dailycodework.buynowdotcom.dtos.ImageDto;
+import com.dailycodework.buynowdotcom.dtos.ProductDto;
 import com.dailycodework.buynowdotcom.model.Favorite;
 import com.dailycodework.buynowdotcom.model.Product;
 import com.dailycodework.buynowdotcom.model.User;
 import com.dailycodework.buynowdotcom.repository.FavoriteRepository;
 import com.dailycodework.buynowdotcom.repository.ProductRepository;
 import com.dailycodework.buynowdotcom.repository.UserRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,7 +33,7 @@ public class FavoriteService implements IFavoriteService {
     public Favorite addFavorite(Long userId, Long productId) {
 
         if (favoriteRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new EntityNotFoundException("Product already in favorites");
+            throw new EntityExistsException("Product already in favorites");
         }
 
         User user = userRepository.findById(userId)
@@ -77,6 +80,35 @@ public class FavoriteService implements IFavoriteService {
     }
     @Override
     public FavoriteDto convertToDto(Favorite favorite) {
-        return modelMapper.map(favorite, FavoriteDto.class);
+        FavoriteDto favoriteDto = new FavoriteDto();
+        favoriteDto.setId(favorite.getId());
+        favoriteDto.setCreatedAt(favorite.getCreatedAt());
+
+        Product product = favorite.getProduct();
+
+        ProductDto productDto = new ProductDto();
+        productDto.setId(product.getId());
+        productDto.setName(product.getName());
+        productDto.setBrand(product.getBrand());
+        productDto.setPrice(product.getPrice());
+        productDto.setInventory(product.getInventory());
+        productDto.setDescription(product.getDescription());
+        productDto.setCategory(product.getCategory());
+
+        if (product.getImages() != null) {
+            List<ImageDto> imageDtos = product.getImages().stream().map(image -> {
+                ImageDto imageDto = new ImageDto();
+                imageDto.setId(image.getId());
+                imageDto.setFileName(image.getFileName());
+                imageDto.setDownloadUrl(image.getDownloadUrl());
+                return imageDto;
+            }).toList();
+
+            productDto.setImages(imageDtos);
+        }
+
+        favoriteDto.setProduct(productDto);
+
+        return favoriteDto;
     }
 }

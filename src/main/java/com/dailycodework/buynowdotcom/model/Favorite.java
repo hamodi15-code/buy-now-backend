@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "favorites",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class Favorite {
 
     @Id

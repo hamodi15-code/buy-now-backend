@@ -30,10 +30,10 @@ public class FavoriteController {
 
     }
 
-    @PostMapping("/add")
+    @PostMapping("add/user/{userId}/product/{productId}")
     public ResponseEntity<ApiResponse> addFavorite(
-            @RequestParam Long userId,
-            @RequestParam Long productId) {
+            @PathVariable Long userId,
+            @PathVariable Long productId) {
 
             Favorite favorite = favoriteService.addFavorite(userId, productId);
             FavoriteDto favoriteDto = favoriteService.convertToDto(favorite);
@@ -41,10 +41,10 @@ public class FavoriteController {
 
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("remove/user/{userId}/product/{productId}")
     public ResponseEntity<ApiResponse> removeFavorite(
-            @RequestParam Long userId,
-            @RequestParam Long productId) {
+            @PathVariable Long userId,
+            @PathVariable Long productId) {
         favoriteService.removeFavorite(userId, productId);
         return ResponseEntity.ok(new ApiResponse("Removed from favorites", null));
 
