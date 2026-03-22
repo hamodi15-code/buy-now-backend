@@ -1,0 +1,3 @@
+2026-03-22 09:00:08.939266+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "products" not found; SQL statement:
+select * from products [42102-224]
